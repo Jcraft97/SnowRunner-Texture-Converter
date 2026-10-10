@@ -1,26 +1,56 @@
 # Image Converter
 
 Python command-line tools for converting compressed image textures used in
-SnowRunner and for decoding a separate H2A Pict PCT variant.
+SnowRunner and for decoding a separate H2A Pict PCT variant for Expeditions.
 
-## Image formats
+## What files you need:
 
-### DDS to SnowRunner TCIP PCT
+### SnowRunner
 
-[`Convert_DDS-to-PCT`](./Convert_DDS-to-PCT/) converts block-compressed DDS
-textures to SnowRunner's little-endian `TCIP` PCT format.
+TGAs are used for textures for the trucks. These files then converted by `SnowRunnerEditor` to PCT and DDS formats.
 
-| DDS input | TCIP PCT format ID | Handling |
-| --- | --- | --- |
-| DXT1 / BC1 | `0x0C` (12) | Compressed blocks copied unchanged |
-| DXT3 / BC2 | `0x0F` (15) | Explicit alpha is transcoded to BC3; color blocks are copied |
-| DXT5 / BC3 | `0x0F` (15) | Compressed blocks copied unchanged |
-| DX10 BC7 UNORM | `0x33` (51) | Compressed blocks copied unchanged |
-| DX10 BC7 UNORM_SRGB | `0x34` (52) | Compressed blocks copied unchanged |
+### Expeditions
 
-Legacy DDS headers support DXT1, DXT3, and DXT5. DX10 DDS headers support BC1,
-BC2, BC3, and BC7. The converter accepts single 2D textures and mip chains;
-uncompressed textures, arrays, cube maps, and 3D textures are not supported.
+Expeditions works the same.
+
+Note: Expeditions has its on editor called `ExpeditionsEditor`, They seem to be the same. 
+
+## What files are there:
+
+### SnowRunner 
+
+DDS file for trucks are found in the `editor.pak` file.
+
+PCT files are in the `shared_textures.pak`
+
+### Expeditions
+
+DDS file for trucks are found in the `editor.pak` file.
+
+Expeditions does not include the PCT files in the released version of the game. 
+Hence the DDS to PCT converter. 
+
+# Image formats
+
+SnowRunner and Expeditions use diffrent formats for their files. 
+
+### SnowRunner
+
+TGA:  
+
+PCT: Little-endian `TCIP` PCT files with BC7 format IDs 51 and 52
+
+DDS: 
+
+### Expeditions
+
+TGA:
+
+PCT:
+
+DDS: DXT1 and DXT3
+
+# Converter Info
 
 ### SnowRunner TCIP PCT to TGA
 
@@ -29,7 +59,11 @@ files with BC7 format IDs 51 and 52. It decodes the top-level image to a
 top-origin, 32-bit TGA. Decoding requires the Python package
 `texture2ddecoder`.
 
+This converter is tested and proven.
+
+
 ### H2A Pict PCT to PNG
+This converter was buit for the ingame truck store pics and has not been tested with anthing else.
 
 [`Convert_PCT-to-PNG`](./Convert_PCT-to-PNG/) handles a separate PCT variant
 with a 72-byte H2A Pict header. It decodes DXT1 (`0x0C`) and BC7A (`0x34`)

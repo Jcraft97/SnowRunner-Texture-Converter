@@ -2,10 +2,16 @@
 
 ## Purpose
 
-This project converts image textures for the game SnowRunner in many formats.
+This project converts image textures for the game SnowRunner/Expeditions in many formats.
 
 Do not commit generated output, local archives, virtual environments, 
 or Python cache files. Do not download other git repos.
+
+File Names:
+
+SR = SnowRunner
+
+EX = Expeditions
 
 ## Git commits
 
@@ -16,3 +22,9 @@ Add this trailer to commits:
 ```text
 Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
 ```
+
+## Reference documentation
+
+Here is the official truck-modding documentation:
+
+<https://expeditions-guides.saber.games/truck_modding/getting_started/intro/>

@@ -1,4 +1,4 @@
-# Image Converter
+# Texture Converter
 
 Python command-line tools for converting compressed image textures used in
 SnowRunner and for decoding a separate H2A Pict PCT variant for Expeditions.

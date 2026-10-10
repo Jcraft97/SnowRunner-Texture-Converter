@@ -1,0 +1,1 @@
+texture2ddecoder>=1.0.6

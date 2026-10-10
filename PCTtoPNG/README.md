@@ -12,6 +12,19 @@ Install the one decoder dependency first:
 py -m pip install -r requirements.txt
 ```
 
+## Project Layout
+
+- `pct_to_tga.py` validates TCIP PCT headers and mip layouts and converts BC7
+  formats 51 and 52 to top-origin 32-bit TGA. It supports single files and
+  recursive directory conversion, with an optional destination preserving
+  source-relative paths.
+- `test_pct_to_tga.py` covers BC7 conversion, PCT validation, mip sizing,
+  directory traversal, and per-file error handling.
+- `requirements.txt` pins `texture2ddecoder==1.0.6`, required only for PCT
+  texture conversion and the PCT converter tests. Archive extraction,
+  CombineXMesh parsing, and FBX export use only the Python standard library;
+  there are no other third-party runtime dependencies.
+  
 ## Usage
 
 Convert one file next to the source:

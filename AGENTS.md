@@ -2,16 +2,30 @@
 
 ## Purpose
 
-This project converts image textures for the game SnowRunner/Expeditions in many formats.
+This project contains command-line texture converters. The DDS-to-PCT and
+PCT-to-TGA tools target SnowRunner's little-endian `TCIP` PCT format. The
+PCT-to-PNG tool handles a separate 72-byte H2A Pict PCT variant.
 
-Do not commit generated output, local archives, virtual environments, 
-or Python cache files. Do not download other git repos.
+## Image format notes
 
-File Names:
+- DDS-to-PCT accepts legacy DXT1/DXT3/DXT5 and DX10 BC1/BC2/BC3/BC7 compressed
+  2D textures, including mip chains. It writes TCIP format IDs 12 (BC1), 15
+  (BC3), 51 (BC7 UNORM), or 52 (BC7 sRGB). DXT3/BC2 alpha is transcoded to BC3.
+- PCT-to-TGA decodes TCIP BC7 format IDs 51 and 52 to top-level TGA images.
+- PCT-to-PNG decodes H2A Pict DXT1 (`0x0C`), BC7A (`0x34`), raw 4/8-bit
+  grayscale, and raw 16-bit RGB565 to PNG.
+- A `.pct` extension alone does not identify the PCT variant. Do not conflate
+  TCIP and H2A Pict headers or assume their format IDs have the same meaning.
+- There is no Expeditions-specific PCT writer. DDS codec support does not imply
+  that the produced SnowRunner TCIP PCT is an Expeditions texture.
 
-SR = SnowRunner
+Do not commit generated output, local archives, virtual environments, or Python
+cache files. Do not download other git repos.
 
-EX = Expeditions
+## File names
+
+- `SR` = SnowRunner
+- `EX` = Expeditions
 
 ## Git commits
 

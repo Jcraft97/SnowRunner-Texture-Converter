@@ -3,6 +3,9 @@
 Python command-line tools for converting compressed image textures used in
 SnowRunner and for decoding a separate H2A Pict PCT variant for Expeditions.
 
+Public contributions are welcome, just keep with in the scope of the project.
+
+
 ## What files you need:
 
 ### SnowRunner

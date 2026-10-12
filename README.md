@@ -64,6 +64,12 @@ top-origin, 32-bit TGA. Decoding requires the Python package
 
 This converter is tested and proven.
 
+### DDS to SnowRunner TCIP PCT
+
+[`Convert-DDS-to-PCT`](./Convert-DDS-to-PCT/) accepts single 2D DX10 BC7 DDS
+textures in formats 98 (UNORM) and 99 (sRGB), including mip chains. It writes
+TCIP PCT format IDs 51 (BC7 UNORM) and 52 (BC7 sRGB), respectively. Other DDS
+formats are rejected.
 
 ### H2A Pict PCT to PNG
 This converter was buit for the ingame truck store pics and has not been tested with anthing else.
@@ -81,10 +87,10 @@ converter rather than assuming the formats are interchangeable.
 ### Expeditions
 
 There is no Expeditions-specific PCT writer in this project. The
-DDS-to-PCT converter writes SnowRunner TCIP PCT files, even when its DDS input
-uses a supported compression format. The Expeditions DDS examples in the
-workspace use DXT1 and DXT3; accepting those DDS codecs does not establish
-support for Expeditions' texture containers or output format.
+DDS-to-PCT converter writes SnowRunner TCIP PCT files from DX10 BC7 inputs.
+The Expeditions DDS examples in the workspace use DXT1 and DXT3; this
+converter does not accept those formats and does not support Expeditions'
+texture containers or output format.
 
 ## Project layout
 

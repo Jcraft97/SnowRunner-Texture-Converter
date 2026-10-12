@@ -8,9 +8,9 @@ PCT-to-PNG tool handles a separate 72-byte H2A Pict PCT variant.
 
 ## Image format notes
 
-- DDS-to-PCT accepts legacy DXT1/DXT3/DXT5 and DX10 BC1/BC2/BC3/BC7 compressed
-  2D textures, including mip chains. It writes TCIP format IDs 12 (BC1), 15
-  (BC3), 51 (BC7 UNORM), or 52 (BC7 sRGB). DXT3/BC2 alpha is transcoded to BC3.
+- DDS-to-PCT accepts DX10 BC7 2D textures in formats 98 (UNORM) and 99 (sRGB),
+  including mip chains. It writes TCIP format IDs 51 (BC7 UNORM) and 52
+  (BC7 sRGB).
 - PCT-to-TGA decodes TCIP BC7 format IDs 51 and 52 to top-level TGA images.
 - PCT-to-PNG decodes H2A Pict DXT1 (`0x0C`), BC7A (`0x34`), raw 4/8-bit
   grayscale, and raw 16-bit RGB565 to PNG.

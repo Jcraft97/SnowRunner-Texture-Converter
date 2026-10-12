@@ -1,4 +1,4 @@
-"""Convert compressed DDS textures to SnowRunner TCIP PCT textures."""
+"""Convert DX10 BC7 DDS textures to SnowRunner TCIP PCT textures."""
 
 from __future__ import annotations
 
@@ -14,22 +14,11 @@ DDS_HEADER_SIZE = 124
 DDS_PIXEL_FORMAT_SIZE = 32
 DDS_FOURCC_FLAG = 0x4
 DDS_MIPMAPCOUNT_FLAG = 0x20000
-DDS_DEPTH_FLAG = 0x800000
-DDS_CUBEMAP_CAPS2 = 0x200
-DDS_VOLUME_CAPS2 = 0x200000
 DDS_RESOURCE_DIMENSION_TEXTURE2D = 3
 DDS_RESOURCE_MISC_TEXTURECUBE = 0x4
 
-DXGI_BC1_FORMATS = {71: 12, 72: 12}
-DXGI_BC2_FORMATS = {74, 75}
-DXGI_BC3_FORMATS = {77: 15, 78: 15}
 DXGI_BC7_FORMATS = {98: 51, 99: 52}
-LEGACY_FOURCC_FORMATS = {
-    b"DXT1": (8, 12, False),
-    b"DXT3": (16, 15, True),
-    b"DXT5": (16, 15, False),
-}
-PCT_BLOCK_BYTES = {12: 8, 15: 16, 51: 16, 52: 16}
+PCT_BLOCK_BYTES = {51: 16, 52: 16}
 
 PCT_WIDTH_OFFSET = 16
 PCT_HEIGHT_OFFSET = 20
@@ -59,41 +48,7 @@ def _mip_sizes(width: int, height: int, mip_count: int, block_bytes: int) -> lis
     ]
 
 
-def _encode_bc3_alpha(dxt3_alpha: bytes) -> bytes:
-    alpha_values = [
-        ((dxt3_alpha[index // 2] >> (4 * (index % 2))) & 0x0F) * 17
-        for index in range(16)
-    ]
-    alpha0 = max(alpha_values)
-    alpha1 = min(alpha_values)
-    if alpha0 == alpha1:
-        palette = [alpha0] * 8
-    else:
-        palette = [
-            alpha0,
-            alpha1,
-            *(
-                ((8 - index) * alpha0 + (index - 1) * alpha1) // 7
-                for index in range(2, 8)
-            ),
-        ]
-
-    packed_indices = 0
-    for index, alpha in enumerate(alpha_values):
-        palette_index = min(range(8), key=lambda candidate: abs(palette[candidate] - alpha))
-        packed_indices |= palette_index << (3 * index)
-    return bytes((alpha0, alpha1)) + packed_indices.to_bytes(6, "little")
-
-
-def _dxt3_to_bc3(payload: bytes) -> bytes:
-    output = bytearray(len(payload))
-    for offset in range(0, len(payload), 16):
-        output[offset : offset + 8] = _encode_bc3_alpha(payload[offset : offset + 8])
-        output[offset + 8 : offset + 16] = payload[offset + 8 : offset + 16]
-    return bytes(output)
-
-
-def _parse_dds(dds_data: bytes) -> tuple[int, int, int, int, bytes, bool]:
+def _parse_dds(dds_data: bytes) -> tuple[int, int, int, int, bytes]:
     if len(dds_data) < 4 + DDS_HEADER_SIZE:
         raise ValueError("DDS file is too small to contain a complete header")
     if dds_data[:4] != DDS_MAGIC:
@@ -104,7 +59,6 @@ def _parse_dds(dds_data: bytes) -> tuple[int, int, int, int, bytes, bool]:
         raise ValueError(f"invalid DDS header size: {header_size}")
     (flags,) = struct.unpack_from("<I", dds_data, 8)
     height, width = struct.unpack_from("<II", dds_data, 12)
-    (depth,) = struct.unpack_from("<I", dds_data, 24)
     (mip_count_field,) = struct.unpack_from("<I", dds_data, 28)
     (pixel_format_size,) = struct.unpack_from("<I", dds_data, 76)
     (pixel_format_flags,) = struct.unpack_from("<I", dds_data, 80)
@@ -113,10 +67,9 @@ def _parse_dds(dds_data: bytes) -> tuple[int, int, int, int, bytes, bool]:
     if pixel_format_size != DDS_PIXEL_FORMAT_SIZE:
         raise ValueError(f"invalid DDS pixel format size: {pixel_format_size}")
     if not pixel_format_flags & DDS_FOURCC_FLAG:
-        raise ValueError("only block-compressed DDS files are supported")
+        raise ValueError("only DX10 BC7 DDS files are supported")
 
     payload_offset = 4 + DDS_HEADER_SIZE
-    transcode_dxt3 = False
     if fourcc == b"DX10":
         if len(dds_data) < payload_offset + 20:
             raise ValueError("DDS DX10 extended header is truncated")
@@ -129,30 +82,15 @@ def _parse_dds(dds_data: bytes) -> tuple[int, int, int, int, bytes, bool]:
             raise ValueError("DDS cube textures are not supported")
         if array_size != 1:
             raise ValueError("DDS texture arrays are not supported")
-        if dxgi_format in DXGI_BC1_FORMATS:
-            block_bytes, pct_format = 8, DXGI_BC1_FORMATS[dxgi_format]
-        elif dxgi_format in DXGI_BC2_FORMATS:
-            block_bytes, pct_format = 16, 15
-            transcode_dxt3 = True
-        elif dxgi_format in DXGI_BC3_FORMATS:
-            block_bytes, pct_format = 16, DXGI_BC3_FORMATS[dxgi_format]
-        elif dxgi_format in DXGI_BC7_FORMATS:
-            block_bytes, pct_format = 16, DXGI_BC7_FORMATS[dxgi_format]
-        else:
+        if dxgi_format not in DXGI_BC7_FORMATS:
             raise ValueError(
-                f"unsupported DXGI format {dxgi_format}; supported formats are BC1, BC2, BC3, and BC7"
+                f"unsupported DXGI format {dxgi_format}; expected BC7 format 98 or 99"
             )
+        block_bytes, pct_format = 16, DXGI_BC7_FORMATS[dxgi_format]
         payload_offset += 20
-    elif fourcc in LEGACY_FOURCC_FORMATS:
-        (caps2,) = struct.unpack_from("<I", dds_data, 112)
-        if caps2 & DDS_CUBEMAP_CAPS2:
-            raise ValueError("DDS cube textures are not supported")
-        if flags & DDS_DEPTH_FLAG or caps2 & DDS_VOLUME_CAPS2 or depth > 1:
-            raise ValueError("only 2D DDS textures are supported")
-        block_bytes, pct_format, transcode_dxt3 = LEGACY_FOURCC_FORMATS[fourcc]
     else:
         raise ValueError(
-            f"unsupported DDS compression FourCC {fourcc!r}; expected DXT1, DXT3, DXT5, or DX10"
+            f"unsupported DDS compression FourCC {fourcc!r}; expected DX10 BC7"
         )
 
     if not 0 < width <= MAX_DIMENSION or not 0 < height <= MAX_DIMENSION:
@@ -168,7 +106,7 @@ def _parse_dds(dds_data: bytes) -> tuple[int, int, int, int, bytes, bool]:
             "DDS payload size does not match its dimensions and compressed mip chain "
             f"(expected {expected_size}, found {len(payload)})"
         )
-    return width, height, mip_count, pct_format, payload, transcode_dxt3
+    return width, height, mip_count, pct_format, payload
 
 
 def _build_pct_header(
@@ -199,19 +137,11 @@ def _build_pct_header(
 
 
 def dds_to_pct(dds_data: bytes) -> bytes:
-    """Convert a BC-compressed DDS texture into a SnowRunner TCIP PCT file."""
-    width, height, mip_count, pct_format, payload, transcode_dxt3 = _parse_dds(dds_data)
-    output_format = 15 if transcode_dxt3 else pct_format
+    """Convert a DX10 BC7 DDS texture into a SnowRunner TCIP PCT file."""
+    width, height, mip_count, pct_format, payload = _parse_dds(dds_data)
+    output_format = pct_format
     output_block_bytes = PCT_BLOCK_BYTES[output_format]
     mip_sizes = _mip_sizes(width, height, mip_count, output_block_bytes)
-
-    if transcode_dxt3:
-        converted_mips = []
-        offset = 0
-        for mip_size in mip_sizes:
-            converted_mips.append(_dxt3_to_bc3(payload[offset : offset + mip_size]))
-            offset += mip_size
-        payload = b"".join(converted_mips)
 
     header = _build_pct_header(width, height, mip_count, output_format, mip_sizes)
     total_size = len(header) + len(payload) + PCT_FOOTER_SIZE
@@ -254,7 +184,7 @@ def convert_directory(input_dir: Path, output_dir: Path | None = None) -> tuple[
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Convert compressed DDS textures to SnowRunner TCIP PCT textures."
+        description="Convert DX10 BC7 DDS textures to SnowRunner TCIP PCT textures."
     )
     parser.add_argument("input", type=Path, help="input .dds file or directory")
     parser.add_argument("output", nargs="?", type=Path, help="output .pct path or directory")

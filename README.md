@@ -64,7 +64,7 @@ top-origin, 32-bit TGA. Decoding requires the Python package
 
 This converter is tested and proven.
 
-### DDS to SnowRunner TCIP PCT
+### Expeditions DDS to SnowRunner TCIP PCT
 
 [`Convert-DDS-to-PCT`](./Convert-DDS-to-PCT/) accepts single 2D DX10 BC7 DDS
 textures in formats 98 (UNORM) and 99 (sRGB), including mip chains. It writes
@@ -96,9 +96,9 @@ texture containers or output format.
 
 Each converter has its own folder and README with usage details:
 
-- [`Convert_DDS-to-PCT`](./Convert_DDS-to-PCT/README.md)
-- [`Convert_PCT-to-PNG`](./Convert_PCT-to-PNG/README.md)
-- [`Convert_PCT-to-TGA`](./Convert_PCT-to-TGA/README.md)
+- [`Convert-DDS-to-PCT`](./Convert_DDS-to-PCT/README.md)
+- [`Convert-PCT-to-PNG`](./Convert_PCT-to-PNG/README.md)
+- [`Convert-PCT-to-TGA`](./Convert_PCT-to-TGA/README.md)
 
 ## Reference documentation
 

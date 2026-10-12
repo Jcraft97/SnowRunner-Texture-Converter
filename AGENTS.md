@@ -22,6 +22,8 @@ PCT-to-PNG tool handles a separate 72-byte H2A Pict PCT variant.
 Do not commit generated output, local archives, virtual environments, or Python
 cache files. Do not download other git repos.
 
+Always document info in the `README` and the `AGENTS` files, do not override preexisting info with approval.
+
 ## File names
 
 - `SR` = SnowRunner

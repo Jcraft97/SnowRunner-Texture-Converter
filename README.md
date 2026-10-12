@@ -49,7 +49,7 @@ DDS:
 
 TGA:
 
-PCT:
+PCT: Should be the same as SnowRunner
 
 DDS: DXT1 and DXT3
 

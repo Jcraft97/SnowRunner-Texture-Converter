@@ -4,13 +4,17 @@
 
 This project contains command-line texture converters. The DDS-to-PCT and
 PCT-to-TGA tools target SnowRunner's little-endian `TCIP` PCT format. The
-PCT-to-PNG tool handles a separate 72-byte H2A Pict PCT variant.
+DDS-to-TGA tool decodes Expeditions editor DXT1/DXT3 DDS files to SnowRunner
+TGA. The PCT-to-PNG tool handles a separate 72-byte H2A Pict PCT variant.
 
 ## Image format notes
 
 - DDS-to-PCT accepts DX10 BC7 2D textures in formats 98 (UNORM) and 99 (sRGB),
   including mip chains. It writes TCIP format IDs 51 (BC7 UNORM) and 52
   (BC7 sRGB).
+- DDS-to-TGA accepts Expeditions legacy DXT1 and DXT3 2D DDS textures,
+  including mip chains. It writes SnowRunner 32-bit TGA files (image type 2,
+  descriptor `0x28`) from the top-level mip only.
 - PCT-to-TGA decodes TCIP BC7 format IDs 51 and 52 to top-level TGA images.
 - PCT-to-PNG decodes H2A Pict DXT1 (`0x0C`), BC7A (`0x34`), raw 4/8-bit
   grayscale, and raw 16-bit RGB565 to PNG.

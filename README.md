@@ -39,7 +39,8 @@ SnowRunner and Expeditions use diffrent formats for their files.
 
 ### SnowRunner
 
-TGA:  
+TGA: Uncompressed 32-bit BGRA, image type 2, image descriptor `0x28`
+(top-left origin with 8-bit alpha), no Truevision footer
 
 PCT: Little-endian `TCIP` PCT files with BC7 format IDs 51 and 52
 
@@ -51,7 +52,7 @@ TGA:
 
 PCT: Should be the same as SnowRunner
 
-DDS: DXT1 and DXT3
+DDS: Legacy DXT1 and DXT3 (not DX10 BC7)
 
 # Converter Info
 
@@ -63,6 +64,13 @@ top-origin, 32-bit TGA. Decoding requires the Python package
 `texture2ddecoder`.
 
 This converter is tested and proven.
+
+### Expeditions DDS to SnowRunner TGA
+
+[`Convert-DDS-to-TGA`](./Convert-DDS-to-TGA/) reads Expeditions editor DDS
+textures in legacy DXT1 and DXT3. It decodes the top-level image to a
+top-origin, 32-bit BGRA TGA matching the SnowRunner templates in
+`template_SR_TGA`. No third-party packages are required.
 
 ### Expeditions DDS to SnowRunner TCIP PCT
 
@@ -96,9 +104,10 @@ texture containers or output format.
 
 Each converter has its own folder and README with usage details:
 
-- [`Convert-DDS-to-PCT`](./Convert_DDS-to-PCT/README.md)
-- [`Convert-PCT-to-PNG`](./Convert_PCT-to-PNG/README.md)
-- [`Convert-PCT-to-TGA`](./Convert_PCT-to-TGA/README.md)
+- [`Convert-DDS-to-PCT`](./Convert-DDS-to-PCT/README.md)
+- [`Convert-DDS-to-TGA`](./Convert-DDS-to-TGA/README.md)
+- [`Convert-PCT-to-PNG`](./Convert-PCT-to-PNG/README.md)
+- [`Convert-PCT-to-TGA`](./Convert-PCT-to-TGA/README.md)
 
 ## Reference documentation
 

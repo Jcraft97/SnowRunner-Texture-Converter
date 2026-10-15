@@ -15,8 +15,8 @@ converter validates header and payload size, then writes only the decoded
 top-level image. DX10 BC7, DXT5, uncompressed RGB, texture arrays, cube maps,
 and 3D textures are rejected.
 
-The TGA header matches the SnowRunner templates in `template_SR_TGA`: image
-type 2, 32 bits per pixel, image descriptor `0x28` (top-left origin with 8-bit
+The TGA header matches the SnowRunner templates: image type 2, 
+32 bits per pixel, image descriptor `0x28` (top-left origin with 8-bit
 alpha), and no Truevision footer.
 
 ## Requirements
@@ -50,5 +50,3 @@ their corresponding DDS files. Unsupported or invalid files are reported;
 batch conversion continues for the remaining files and exits with a non-zero
 status if any conversion failed.
 
-Expeditions sample inputs used while building this converter live in
-`test_convert_DDS_EX`.

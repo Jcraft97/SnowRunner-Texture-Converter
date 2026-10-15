@@ -2,16 +2,13 @@
 
 ## Purpose
 
-This project contains command-line texture converters. The DDS-to-PCT and
-PCT-to-TGA tools target SnowRunner's little-endian `TCIP` PCT format. The
-DDS-to-TGA tool decodes Expeditions editor DXT1/DXT3 DDS files to SnowRunner
-TGA. The PCT-to-PNG tool handles a separate 72-byte H2A Pict PCT variant.
+This project contains command-line texture converters. The PCT-to-TGA tools 
+target SnowRunner's little-endian `TCIP` PCT format. The DDS-to-TGA tool 
+decodes Expeditions editor DXT1/DXT3 DDS files to SnowRunner TGA. 
+The PCT-to-PNG tool handles a separate 72-byte H2A Pict PCT variant.
 
 ## Image format notes
 
-- DDS-to-PCT accepts DX10 BC7 2D textures in formats 98 (UNORM) and 99 (sRGB),
-  including mip chains. It writes TCIP format IDs 51 (BC7 UNORM) and 52
-  (BC7 sRGB).
 - DDS-to-TGA accepts Expeditions legacy DXT1 and DXT3 2D DDS textures,
   including mip chains. It writes SnowRunner 32-bit TGA files (image type 2,
   descriptor `0x28`) from the top-level mip only.
@@ -37,11 +34,6 @@ Always document info in the `README` and the `AGENTS` files, do not override pre
 
 After completing the requested work, commit the task-related changes by default; do not wait for the user to ask for a commit. Preserve pre-existing unrelated work by leaving it unstaged and out of the commit. Then push the commit. If a commit cannot be created, report the specific blocker and the uncommitted state.
 
-Add this trailer to commits:
-
-```text
-Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
-```
 
 ## Reference documentation
 

@@ -1,23 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <link href="test.css" rel="stylesheet" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Command-line texture converters for SnowRunner and Expeditions." />
-        <title>ImageConverter — SnowRunner &amp; Expeditions</title>
-    </head>
-    <body>
-        <main>
-            <h1>ImageConverter</h1>
-            <p>Command-line tools for converting texture formats used by SnowRunner and Expeditions.</p>
-            <h2>Converters</h2>
-            <ul>
-                <li><a href="https://github.com/Jcraft97/ImageConverter/tree/main/Convert-DDS-to-TGA">Expeditions DDS to SnowRunner TGA</a> — legacy DXT1/DXT3 DDS.</li>
-                <li><a href="https://github.com/Jcraft97/ImageConverter/tree/main/Convert-PCT-to-TGA">SnowRunner TCIP PCT to TGA</a> — BC7 format IDs 51/52.</li>
-                <li><a href="https://github.com/Jcraft97/ImageConverter/tree/main/Convert-PCT-to-PNG">H2A Pict PCT to PNG</a> — a separate PCT variant.</li>
-            </ul>
-            <p>See the <a href="https://github.com/Jcraft97/ImageConverter">repository README</a> for setup and usage. A <code>.pct</code> extension alone does not identify the PCT variant.</p>
-        </main>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Command-line texture converters for SnowRunner and Expeditions.">
+  <title>ImageConverter | SnowRunner &amp; Expeditions</title>
+  <link rel="stylesheet" href="test.css">
+</head>
+<body>
+  <main>
+    <p class="eyebrow">SNOWRUNNER · EXPEDITIONS</p>
+    <h1>ImageConverter</h1>
+    <p class="intro">Command-line tools for converting game texture files to formats you can inspect and edit.</p>
+
+    <section aria-labelledby="tools-heading">
+      <h2 id="tools-heading">Texture converters</h2>
+      <ul>
+        <li><a href="https://github.com/Jcraft97/ImageConverter/tree/main/Convert-DDS-to-TGA">Expeditions DDS to SnowRunner TGA</a><span>Decode legacy DXT1 and DXT3 DDS textures.</span></li>
+        <li><a href="https://github.com/Jcraft97/ImageConverter/tree/main/Convert-PCT-to-TGA">SnowRunner TCIP PCT to TGA</a><span>Decode BC7 format IDs 51 and 52.</span></li>
+        <li><a href="https://github.com/Jcraft97/ImageConverter/tree/main/Convert-PCT-to-PNG">H2A Pict PCT to PNG</a><span>Decode a separate PCT variant used for in-game images.</span></li>
+      </ul>
+    </section>
+
+    <p class="note">A <code>.pct</code> extension alone does not identify the file format. TCIP and H2A Pict PCT files require different converters.</p>
+    <a class="repo" href="https://github.com/Jcraft97/ImageConverter">View the project on GitHub <span aria-hidden="true">↗</span></a>
+  </main>
+</body>
 </html>
